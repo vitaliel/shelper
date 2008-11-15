@@ -1,0 +1,5 @@
+xmpp:
+  server: localhost
+  port: 5222
+  username: desktop@localhost
+  password:

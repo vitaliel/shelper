@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+base = File.dirname(__FILE__)
+$:.unshift "#{base}/../lib"
+
+require 'shelper'
+
+STDOUT.sync = true
+
+SHelper.start ["#{base}/../conf/shelper.yml"]
