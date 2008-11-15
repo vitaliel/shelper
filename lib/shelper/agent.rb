@@ -1,20 +1,34 @@
+
 module SHelper;end
 
 class SHelper::Agent
   include Jabber
 
   def initialize
-    user = JID.new("#{configatron.xmpp.username}/XMPPAgent")
+    user = JID.new("#{configatron.xmpp.username}/SHelperAgent")
     @password = configatron.xmpp.password
     @client = Client.new(user)
+    @cmd_map = {}
   end
 
   def connect
-    #Connect to server sending username and password
-    @client.connect(configatron.xmpp.server_name, configatron.xmpp.port)
-    @client.auth(@password)
+    try_to_connect
 
+    @client.auth(@password)
     post_connect if @client
+  end
+
+  def try_to_connect
+    loop do
+      begin
+        @client.connect(configatron.xmpp.server_name, configatron.xmpp.port)
+        @connected = true
+        break
+      rescue Errno::ECONNREFUSED => e
+        puts "Can not connect, sleep a while"
+        sleep(30)
+      end
+    end
   end
 
   def post_connect
@@ -28,9 +42,17 @@ class SHelper::Agent
   end
 
   def disconnect
+    return unless @connected
+
     @exit = true
-    @worker_thread.wakeup
+    @worker_thread.wakeup if @worker_thread
     @client.close if @client
+  end
+
+  # +obj+ - to which object send message
+  # +cmd_map+ - hash with key regexp and value method name as symbol, each matched message will be passed to obj.send(:method, msg)
+  def add_plugin(obj, cmd_map)
+    @cmd_map[obj] = cmd_map
   end
 
   def register_callbacks
@@ -86,7 +108,7 @@ class SHelper::Agent
     @client.send(message)
   end
 
-  def start_worker_thread
+  def start_worker
     @worker_thread = Thread.new do
       puts "Started new worker thread"
       #Start a loop to listen for incoming messages
@@ -99,15 +121,10 @@ class SHelper::Agent
             puts item
             # Remove the resource from the user, e.g., user@example.com/home = user@example.com
             sender = item.from.to_s.sub(/\/.+$/, '')
+            body = item.body
 
-            # If the message included the line command: create a new command object and attempt to run it
-            if item.body.include? "command: "
-              send_message(sender, "I'll try to run " << item.body.to_s, false)
-              input_command = SHelper::Command.new
-              command_result = input_command.run_command(item.body.to_s)
-              send_message(sender, command_result, false)
-            else
-              send_message(sender, item.body.to_s, true)
+            unless run_cmd(body)
+              send_message(sender, "Was it only a simple message?! " + item.body.to_s, true)
             end
 
             @queue.shift
@@ -120,5 +137,18 @@ class SHelper::Agent
     end
 
     @worker_thread.join
+  end
+
+  def run_cmd(body)
+    for obj, commands_map in @cmd_map
+      for regexp, cmd in commands_map
+        if body =~ regexp
+          obj.send(cmd, body)
+          return true
+        end
+      end
+    end
+
+    false
   end
 end

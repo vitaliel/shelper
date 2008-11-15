@@ -3,3 +3,10 @@ xmpp:
   port: 5222
   username: desktop@localhost
   password:
+
+admin:
+  jid: "boss@localhost"
+  email: "boss@example.com"
+
+# plugins_dir: /home/lz/projects/shelper-plugins
+log_dir: /var/log/shelper
