@@ -1,0 +1,7 @@
+task :default => :install
+
+desc "Install runit shelper service"
+task :install do
+  sh "cp -ar shelper /etc/sv"
+  sh "update-service --add /etc/sv/shelper"
+end
