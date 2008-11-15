@@ -28,31 +28,27 @@ class SHelper::Agent
   end
 
   def disconnect
+    @exit = true
+    @worker_thread.wakeup
     @client.close if @client
   end
 
   def register_callbacks
     @client.add_message_callback do |message|
       @queue << message unless message.body.nil?
+      @worker_thread.wakeup if @worker_thread
     end
-
-    versions = {}
-
-#     @client.add_presence_callback do |pres|
-#       # Already fingerprinted or offline?
-#       unless versions.has_key?(pres.from) || (pres.type == :unavailable) || (pres.type == :error)
-#         # Construct a new query
-#         iq = Iq.new(:get, pres.from)
-#         # and ask for the version
-#         iq.query = Version::IqQueryVersion.new
-#         puts "Asking #{iq.to} for his/her/its version"
-#         versions[pres.from] = :asking
-#         cl.send(iq)
-#       end
-#     end
 
     # The roster instance
     roster = Roster::Helper.new(@client)
+
+    # Callback to handle updated roster items
+    roster.add_update_callback do |olditem,item|
+      if [:from, :none].include?(item.subscription) && item.ask != :subscribe
+        puts("Subscribing to #{item.jid}")
+        item.subscribe
+      end
+    end
 
     # Subscription requests and responses:
     subscription_callback = lambda do |item,pres|
@@ -64,12 +60,8 @@ class SHelper::Agent
 
       case pres.type
       when :subscribe then
-        p pres.from
         puts("Subscription request from #{name}")
-
-        Thread.new do
-          roster.accept_subscription(pres.from)
-        end
+        roster.accept_subscription(pres.from)
       when :subscribed then puts("Subscribed to #{name}")
       when :unsubscribe then puts("Unsubscription request from #{name}")
       when :unsubscribed then puts("Unsubscribed from #{name}")
@@ -86,7 +78,7 @@ class SHelper::Agent
     message.type = :chat
 
     if reply
-      message.body = "Thank you for sending me the message: " << text
+      message.body = "Received message: " << text
     else
       message.body = text
     end
@@ -95,18 +87,20 @@ class SHelper::Agent
   end
 
   def start_worker_thread
-    worker_thread = Thread.new do
+    @worker_thread = Thread.new do
       puts "Started new worker thread"
       #Start a loop to listen for incoming messages
 
       loop do
+        break if @exit
+
         if !@queue.empty?
           @queue.each do |item|
             puts item
-            #Remove the resource from the user, e.g., carlos@xmppserver/exodus = carlos@xmppserver
+            # Remove the resource from the user, e.g., user@example.com/home = user@example.com
             sender = item.from.to_s.sub(/\/.+$/, '')
 
-            #If the message included the line command: create a new command object and attempt to run it
+            # If the message included the line command: create a new command object and attempt to run it
             if item.body.include? "command: "
               send_message(sender, "I'll try to run " << item.body.to_s, false)
               input_command = SHelper::Command.new
@@ -117,14 +111,14 @@ class SHelper::Agent
             end
 
             @queue.shift
-            puts "Queue is now empty" if @queue.empty?
+            # puts "Queue is now empty" if @queue.empty?
           end
         end
-      end
 
-      sleep 1
+        sleep 10
+      end
     end
 
-    worker_thread.join
+    @worker_thread.join
   end
 end

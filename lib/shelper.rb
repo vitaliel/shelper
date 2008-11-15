@@ -3,9 +3,13 @@ require 'configatron'
 
 require 'xmpp4r'
 require 'xmpp4r/roster/helper/roster'
+require 'xmpp4r/version/iq/version'
 
 require 'shelper/command'
 require 'shelper/agent'
+
+Thread.abort_on_exception = true
+Jabber.debug = true
 
 module SHelper
   class << self
