@@ -1,0 +1,23 @@
+= SHelper
+
+SHelper is a Jabber agent written in ruby that will help system administrators with their daily tasks.
+It is simplified version of Engine Yard Vertebra, it was not oriented for the cloud computing, but can be used for that too.
+Agent can be extended with plugins.
+
+Configure your servers from your favorite IM.
+
+Copyright (c) 2008 Vitalie Lazu, vitalie.lazu[at]gmail[dot]com
+
+Please post bugs and feature requests at http://shelper.uservoice.com
+
+== How this agent can be used?
+* Sysadmin - server communications
+  * Install packages, gems, update firewall config, daily sysadmin tasks that are borring after some time to execute on many servers
+* Server to server communications, ssh do not scale and it takes more time to setup
+  * For example nagios server can use local agent to query remote servers for status of the services, free disk disk and server load
+* Agents with custom plugins for an application can collect performance metrics, like apache requests per seconds, network traffic, server load, etc.
+  Data will be collected to central place and can be used to plot graphs, to be  used for analysis
+* Can be used as a replacement for puppet and cfengine
+
+== Examples and use cases
+TODO

@@ -1,0 +1,9 @@
+
+* Install a jabber server: ejabberd or other software
+* apt-get install rubygems
+* gem install configatron xmpp4r
+* Copy shelper.yml-example to shelper.yml and set parameters
+* Run ./bin/shelper-agent
+* Configure server from your favorite IM
+* Cook plugins for your needs
+* Share them with the community
