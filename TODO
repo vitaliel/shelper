@@ -1,3 +1,4 @@
 * Add security for server to server communications
 * Sign messages with gnupg and servers will verify sender
 * Configuration storage for plugins
+* Write custom jabber IM for SHelper, it should be smart to display commands output in other UI windows

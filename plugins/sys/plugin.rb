@@ -6,33 +6,31 @@ module SHelper
     author "Vitalie Lazu"
     description "System plugin that manipulates other plugins"
 
+    cmd_map \
+    /^(:|-)help$/i => :show_help,
+    /^help$/i => :show_help,
+    /^:help ([a-z\-_0-9]+)$/ => :show_help_for,
+    /^:plugin(s)?-list/i => :list_plugins
+
     def help
       show_help(nil)
     end
 
-    def init
-      {
-        /^(:|-)help$/i => :show_help,
-        /^help$/i => :show_help,
-        /^:help ([a-z\-_0-9]+)$/ => :show_help_for,
-        /^:plugin-list/i => :list_plugins,
-      }
-    end
-
     def show_help(msg)
-      rez = ":help - shows this help\n"
+      rez = "Available commands\n"
+      rez << ":help - shows this help\n"
       rez << ":help plugin_name - shows help for plugin_name\n"
       rez << ":plugin-list - shows installed plugins\n"
 
-      @agent.send_message(configatron.admin.jid, rez)
+      send_response(rez)
     end
 
     def show_help_for(msg)
-      @agent.show_help_for(msg[1])
+      send_response @agent.show_help_for(msg[1])
     end
 
     def list_plugins(msg)
-      @agent.list_plugins
+      send_response @agent.list_plugins
     end
   end
 end

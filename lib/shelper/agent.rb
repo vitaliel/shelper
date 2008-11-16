@@ -49,10 +49,9 @@ class SHelper::Agent
     @client.close if @client
   end
 
-  # +obj+ - to which object send message
-  # +cmd_map+ - hash with key regexp and value method name as symbol, each matched message will be passed to obj.send(:method, msg)
-  def add_plugin(obj, cmd_map)
-    @cmd_map[obj] = cmd_map
+  # +klass+ - plugin class
+  def add_plugin(klass)
+    @cmd_map[klass] = klass.cmd_map if klass.cmd_map
   end
 
   def register_callbacks
@@ -109,22 +108,23 @@ class SHelper::Agent
   end
 
   def list_plugins
-    rez = @cmd_map.keys.map {|x| x.name }.join ", "
-    send_message(configatron.admin.jid, rez)
+    @cmd_map.keys.map {|x| x.name }.join ", "
   end
 
   def show_help_for(plugin_name)
-    obj = @cmd_map.keys.detect {|p| p.name == plugin_name}
+    klass = @cmd_map.keys.detect {|p| p.name == plugin_name}
 
-    if obj
-      help_txt = obj.send(:help)
-      msg = "#{obj.name} (#{obj.description})\n" << help_txt
+    if klass
+      help_txt = klass.new.send(:help)
+      msg = klass.name
+      msg << " (#{klass.description})" if klass.description
+      msg << "\n"
+      msg << help_txt
     else
       msg = "Can not find plugin '#{plugin_name}'"
     end
 
-    # TODO send to user that sent message/command, make a map with message_id:recipient
-    send_message(configatron.admin.jid, msg)
+    msg
   end
 
   def start_worker
@@ -137,12 +137,8 @@ class SHelper::Agent
 
         if !@queue.empty?
           @queue.each do |item|
-            # Remove the resource from the user, e.g., user@example.com/home = user@example.com
-            sender = item.from.to_s.sub(/\/.+$/, '')
-            body = item.body
-
-            unless run_cmd(body)
-              send_message(sender, "Was it only a simple message?! " + item.body.to_s, true)
+            unless run_cmd(item)
+              send_message(item.from, "Was it only a simple message?! " + item.body.to_s, true)
             end
 
             @queue.shift
@@ -157,11 +153,17 @@ class SHelper::Agent
     @worker_thread.join
   end
 
-  def run_cmd(body)
-    for obj, commands_map in @cmd_map
+  def run_cmd(msg)
+    body = msg.body
+
+    for klass, commands_map in @cmd_map
       for regexp, cmd in commands_map
         if body =~ regexp
+          obj = klass.new
+          obj.agent = self
+          obj.sender = msg.from
           obj.send(cmd, $~)
+
           return true
         end
       end

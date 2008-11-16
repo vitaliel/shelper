@@ -6,7 +6,9 @@ require 'xmpp4r/roster/helper/roster'
 require 'xmpp4r/version/iq/version'
 
 require 'utils/annotatable'
+
 require 'shelper/base_plugin'
+require 'shelper/command'
 require 'shelper/agent'
 
 
@@ -37,7 +39,7 @@ module SHelper
 
       begin
         @agent.connect
-        @agent.send_message(configatron.admin.jid, "Agent #{`hostname`.strip} reporting for duty at #{Time.now}", false)
+        @agent.send_message(configatron.admin.jid, "Agent at #{`hostname`.strip} is ready to serve.")
         @agent.start_worker
       rescue Interrupt => ignore
       ensure
@@ -65,10 +67,7 @@ module SHelper
     end
 
     def register_plugin(klass)
-      obj = klass.new
-      obj.agent = @agent
-      cmd_map = obj.init
-      @agent.add_plugin(obj, cmd_map)
+      @agent.add_plugin(klass)
     end
 
     def logger
