@@ -1,6 +1,6 @@
 
 module MyModule
-  class MyPlugin < SHelper::Plugin
+  class MyPlugin < SHelper::BasePlugin
     def help
       "cmd1: config parameter value - will set plugin configuration parameter, params: config_path"
       "cmd2: add-ip 127.0.0.4 - will add IP to daemon acl"

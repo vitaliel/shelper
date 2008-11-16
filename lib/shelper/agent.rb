@@ -95,7 +95,7 @@ class SHelper::Agent
     roster.add_subscription_request_callback(0, nil, &subscription_callback)
   end
 
-  def send_message(recipient, text, reply=false)
+  def send_message(recipient, text, reply = false)
     message = Message.new(recipient)
     message.type = :chat
 
@@ -108,9 +108,28 @@ class SHelper::Agent
     @client.send(message)
   end
 
+  def list_plugins
+    rez = @cmd_map.keys.map {|x| x.name }.join ", "
+    send_message(configatron.admin.jid, rez)
+  end
+
+  def show_help_for(plugin_name)
+    obj = @cmd_map.keys.detect {|p| p.name == plugin_name}
+
+    if obj
+      help_txt = obj.send(:help)
+      msg = "#{obj.name} (#{obj.description})\n" << help_txt
+    else
+      msg = "Can not find plugin '#{plugin_name}'"
+    end
+
+    # TODO send to user that sent message/command, make a map with message_id:recipient
+    send_message(configatron.admin.jid, msg)
+  end
+
   def start_worker
     @worker_thread = Thread.new do
-      puts "Started new worker thread"
+      puts "Started worker"
       #Start a loop to listen for incoming messages
 
       loop do
@@ -118,7 +137,6 @@ class SHelper::Agent
 
         if !@queue.empty?
           @queue.each do |item|
-            puts item
             # Remove the resource from the user, e.g., user@example.com/home = user@example.com
             sender = item.from.to_s.sub(/\/.+$/, '')
             body = item.body
@@ -143,7 +161,7 @@ class SHelper::Agent
     for obj, commands_map in @cmd_map
       for regexp, cmd in commands_map
         if body =~ regexp
-          obj.send(cmd, body)
+          obj.send(cmd, $~)
           return true
         end
       end

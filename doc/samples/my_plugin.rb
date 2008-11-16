@@ -1,5 +1,5 @@
 module SA
-  class Daemon < SHelper::Plugin
+  class Daemon < SHelper::BasePlugin
     def help
       "qd: config parameter value - will set plugin configuration parameter, params: config_path"
       "qd: add-ip 127.0.0.4 - will add IP to queue-daemon acl"
