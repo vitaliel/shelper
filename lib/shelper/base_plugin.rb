@@ -28,6 +28,7 @@ class SHelper::BasePlugin
 
     rez = @cmd_ctl.wait
     send_response("Command '#{cmd}' exited with status: #{rez[1]}")
+    return rez[1]
   rescue => e
     send_response("Error: #{e.class} #{e.message}\n#{e.backtrace.join "\n"}")
   end
