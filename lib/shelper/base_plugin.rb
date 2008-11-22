@@ -1,3 +1,4 @@
+require 'shelper/file_util'
 
 module SHelper;end
 
@@ -35,5 +36,11 @@ class SHelper::BasePlugin
 
   def send_response(msg)
     @agent.send_message(@sender, msg)
+  end
+
+  def file_util(file_path)
+    fu = SHelper::FileUtil.new(file_path)
+    # fu.backup_store = BackupStore.new
+    fu
   end
 end
