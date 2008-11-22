@@ -15,6 +15,8 @@ module Os
     end
 
     def gem(msg)
+      opts = ""
+      opts = "--no-ri --no-rdoc" if msg[1] == "install"
       run_cmd("gem #{msg[1]} #{msg[2]}")
     end
 
