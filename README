@@ -14,7 +14,7 @@ Please post bugs and feature requests at http://shelper.uservoice.com
 * Sysadmin - server communications
   * Install packages, gems, update firewall config, daily sysadmin tasks that are borring after some time to execute on many servers
 * Server to server communications, ssh do not scale and it takes more time to setup
-  * For example nagios server can use local agent to query remote servers for status of the services, free disk disk and server load
+  * For example nagios server can use local agent to query remote servers for status of the services, free disk and server load
 * Agents with custom plugins for an application can collect performance metrics, like apache requests per seconds, network traffic, server load, etc.
   Data will be collected to central place and can be used to plot graphs, to be  used for analysis
 * Can be used as a replacement for puppet and cfengine
