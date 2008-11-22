@@ -27,7 +27,7 @@ module SHelper
       lines = []
       modified = false
 
-      File.open(@file_path) do |f|
+      open do |f|
         all_lines = f.readlines
 
         for line in all_lines
@@ -44,10 +44,35 @@ module SHelper
       if modified
         # TODO copy original file to backup store
 
-        File.open(@file_path, "w") do |f|
+        write do |f|
           f.write lines.join
         end
       end
+
+      modified
+    end
+
+    # Append text to matched lines
+    def append_to_lines(regexp, str)
+      modified = false
+      lines = []
+
+      open do |f|
+        all_lines = f.readlines
+
+        for line in all_lines
+          if line =~ regexp
+            lines << (line.chomp << str << "\n")
+            modified = true
+          else
+            lines << line
+          end
+        end
+      end
+
+      write do |f|
+        f.write lines.join
+      end if modified
 
       modified
     end
@@ -58,6 +83,19 @@ module SHelper
       File.open(@file_path, "a") do |f|
         f.write line
         f.write "\n" unless line =~ /\n$/
+      end
+    end
+
+    protected
+    def open(&block)
+      File.open(@file_path) do |f|
+        block.call(f)
+      end
+    end
+
+    def write(&block)
+      File.open(@file_path, "w") do |f|
+        block.call(f)
       end
     end
   end
