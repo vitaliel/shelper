@@ -2,3 +2,6 @@
 * Sign messages with gnupg and servers will verify sender
 * Configuration storage for plugins
 * Write custom jabber IM for SHelper, it should be smart to display commands output in other UI windows
+* Use task declaration style similar to rake, sake, thor, capistrano,
+   to generate help based on desc(regexp, help_str, description) and
+   command :name do ... end
