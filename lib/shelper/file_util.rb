@@ -7,6 +7,7 @@ module SHelper
   # un-comment line
   class FileUtil
     attr_accessor :backup_store
+    attr_reader :bytes_read
 
     def initialize(file_path)
       @file_path =file_path
@@ -83,6 +84,23 @@ module SHelper
       File.open(@file_path, "a") do |f|
         f.write line
         f.write "\n" unless line =~ /\n$/
+      end
+    end
+
+    # filter lines from a file based on regexp
+    # for example mail.log with filter /status=bounced/
+    def filter_lines(regexp, offset = 0, &block)
+      f = File.open(@file_path)
+      f.seek(offset) if offset > 0
+      @bytes_read = 0
+
+      begin
+        while line = f.gets
+          @bytes_read += line.length
+          yield line if line =~ regexp
+        end
+      ensure
+        f.close
       end
     end
 
