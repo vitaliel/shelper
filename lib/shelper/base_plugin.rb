@@ -12,7 +12,7 @@ class SHelper::BasePlugin
   # cmd_map /^help$/ => :show_help
   annotate :cmd_map
 
-  attr_writer :agent, :sender
+  attr_writer :agent, :sender, :message
 
   # Will be called to init the plugin
   def init
@@ -28,14 +28,19 @@ class SHelper::BasePlugin
     end
 
     rez = @cmd_ctl.wait
-    send_response("Command '#{cmd}' exited with status: #{rez[1]}")
+    send_response("Command '#{cmd}' exited with status: #{rez[1]}") if rez[1] != 0
     return rez[1]
   rescue => e
     send_response("Error: #{e.class} #{e.message}\n#{e.backtrace.join "\n"}")
   end
 
   def send_response(msg)
-    @agent.send_message(@sender, msg)
+    answer = @message.answer(true)
+    answer.id = "r" << answer.id if answer.id
+    # pidgin sends html version also
+    answer.delete_element "html"
+    answer.body = msg
+    @agent.send_raw(answer)
   end
 
   def file_util(file_path)

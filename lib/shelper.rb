@@ -34,6 +34,14 @@ module SHelper
       Jabber.debug = configatron.xmpp.debug
 
       @agent = Agent.new
+      @agent.logger = logger
+
+      if configatron.drb.enabled == true
+        logger.info "Loading Drb connector"
+        require 'shelper/drb'
+
+        SHelper::Drb.new(@agent)
+      end
 
       load_plugins
 
