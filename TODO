@@ -1,7 +1,8 @@
 * Add security for server to server communications
 * Sign messages with gnupg and servers will verify sender
-* Configuration storage for plugins
+* Configuration storage for plugins: save configatron.plugin_name to an yaml file: /var/lib/shelper/
 * Write custom jabber IM for SHelper, it should be smart to display commands output in other UI windows
 * Use task declaration style similar to rake, sake, thor, capistrano,
    to generate help based on desc(regexp, help_str, description) and
    command :name do ... end
+* Port plugins from scout and munin

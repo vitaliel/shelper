@@ -48,4 +48,8 @@ class SHelper::BasePlugin
     # fu.backup_store = BackupStore.new
     fu
   end
+
+  def config
+    configatron.send(name)
+  end
 end
