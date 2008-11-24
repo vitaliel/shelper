@@ -36,7 +36,7 @@ class SHelper::BasePlugin
 
   def send_response(msg)
     answer = @message.answer(true)
-    answer.id = "r" << answer.id if answer.id
+    answer.id = "r" << answer.id if answer.id =~ /^task/
     # pidgin sends html version also
     answer.delete_element "html"
     answer.body = msg

@@ -10,6 +10,7 @@ module SHelper
     /^(:|-)help$/i => :show_help,
     /^help$/i => :show_help,
     /^:help ([a-z\-_0-9]+)$/ => :show_help_for,
+    /^:restart/ => :restart,
     /^:plugin(s)?-list/i => :list_plugins
 
     def help
@@ -21,12 +22,17 @@ module SHelper
       rez << ":help - shows this help\n"
       rez << ":help plugin_name - shows help for plugin_name\n"
       rez << ":plugin-list - shows installed plugins\n"
+      rez << ":restart - will restart agent\n"
 
       send_response(rez)
     end
 
     def show_help_for(msg)
       send_response @agent.show_help_for(msg[1])
+    end
+
+    def restart(msg)
+      run_cmd("sv restart shelper")
     end
 
     def list_plugins(msg)

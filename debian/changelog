@@ -1,3 +1,10 @@
+shelper (0.1.0-3) unstable; urgency=low
+
+  * added ejabberd plugin to add users
+  * fixed nfs plugin to allow dash in dns names
+
+ -- Vitalie Lazu <vitalie.lazu@gmail.com>  Mon, 24 Nov 2008 16:59:08 +0200
+
 shelper (0.1.0-2) unstable; urgency=low
 
   * fix debian/control to not recomend ejabberd

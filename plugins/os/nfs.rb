@@ -8,15 +8,25 @@ module Os
 
     cmd_map \
     /^:nfs\s+reload/ => :reload,
-    /^:nfs\s+export\s+(\/[a-z0-9\/]+)\s+(rw|ro)\s+([a-zA-Z0-9.]+)/ => :nfs_export
+    /^:nfs\s+list/ => :list,
+    /^:nfs\s+export\s+(\/[a-z0-9\/]+)\s+(rw|ro)\s+([a-zA-Z0-9.-]+)/ => :nfs_export
 
     def help
       rez = ""
       rez << ":nfs export PATH ro|rw client - will export path to the client\n"
       rez << ":nfs reload - reload info from /etc/exports\n"
+      rez << ":nfs list - show file /etc/exports\n"
     end
 
-    # $1 - path, $2 read/write mode, $3 - client
+    def list(msg)
+      file = "/etc/exports"
+
+      File.open(file) do |f|
+        send_response f.read
+      end
+    end
+
+    # Parameters path, mode: read/write, client
     def nfs_export(msg)
       file = "/etc/exports"
       line = "#{msg[1]} #{msg[3]}(#{msg[2]},sync,no_subtree_check)\n"
