@@ -1,0 +1,21 @@
+xmpp:
+  server_name: localhost
+  port: 5222
+  username: my_server@localhost
+  password:
+
+admin:
+  jid: "boss@localhost"
+  email: "boss@example.com"
+
+plugins_dir: /usr/share/shelper/plugins
+
+log_dir: /var/log/shelper
+
+# Will allow other ruby clients to connect and send messages on agent behalf
+drb:
+  enabled: yes
+  listen: 127.0.0.1:5677
+  acl: 127.0.0.1
+  # used to authenticate clients
+  secret_key: xawerty

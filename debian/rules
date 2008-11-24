@@ -1,0 +1,82 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+build: patch
+
+clean: clean-patched unpatch
+clean-patched:
+	dh_testdir
+	dh_testroot
+
+	# Add here commands to clean up after the build process.
+	rm -rf testdata
+
+	# FIXED upstream for 0.8.2
+	find . -name '._*' -exec rm {} +
+
+	dh_clean 
+
+install: build
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	dh_installchangelogs
+	dh_installdocs
+	cp -r lib/* debian/shelper/usr/lib/ruby/1.8/
+	install -d -m0755 debian/shelper/usr/share/shelper/plugins
+	cp -r plugins/* debian/shelper/usr/share/shelper/plugins
+	chmod --recursive 0644 debian/shelper/usr/lib/ruby/1.8/*
+	chmod 755 `find debian/shelper/usr/lib/ruby/1.8/ -type d`
+	install -m 755 bin/shelper-agent debian/shelper/usr/bin/
+	install -d -m0755 debian/shelper/etc/sv/shelper/log
+	install -m0755 doc/runit/shelper/run \
+	    debian/shelper/etc/sv/shelper/run
+	install -m0600 debian/shelper.yml \
+	    debian/shelper/etc/shelper/shelper.yml
+	install -m0755 doc/runit/shelper/log/run \
+	  debian/shelper/etc/sv/shelper/log/run
+	ln -s /usr/bin/sv debian/shelper/etc/init.d/shelper
+
+	dh_compress
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+patch: patch-stamp
+patch-stamp:
+	# dpatch apply-all
+
+	#touch patch-stamp
+	# dpatch call-all -a=pkg-info >patch-stamp
+
+unpatch:
+	# dpatch deapply-all
+	#rm -rf patch-stamp debian/patched
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# Nothing here
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
