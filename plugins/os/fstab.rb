@@ -10,13 +10,13 @@ module Os
     cmd_map \
     /^:fstab\s+list/ => :fs_list,
     /^:fstab\s+remove\s+([a-zA-Z0-9\/]+)/ => :fs_remove,
-    /^:fstab\s+add-nfs\s+([a-z0-9.-]+)\s+([a-zA-Z0-9\/]+)\s+([a-zA-Z0-9\/]+)\s*([a-z0-9,=]+)?/ => :fs_add_nfs
+    /^:fstab\s+add-nfs\s+([a-zA-Z0-9.-]+)\s+([a-zA-Z0-9\/-_]+)\s+([a-zA-Z0-9\/-_]+)\s*([a-z0-9,=]+)?/ => :fs_add_nfs
 
     def help
       rez = ""
       rez << ":fstab list - will export path to the client\n"
       rez << ":fstab remove MOUNT_POINT - will remove mount_point from /etc/fstab\n"
-      rez << ":fstab add-nfs SERVER EXPORTED_DIR MOUNT_POINT OPTIONS - add nfs mount info to /etc/fstab\n"
+      rez << ":fstab add-nfs SERVER EXPORTED_DIR MOUNT_POINT [OPTIONS] - add nfs mount info to /etc/fstab\n"
     end
 
     # Parameters: mount_point

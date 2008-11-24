@@ -7,7 +7,7 @@ module Os
 
     cmd_map \
     /^:mount\s+list/ => :mount_list,
-    /^:mount\s+(add|del)\s+(\/[a-zA-Z0-9\/]+)/ => :mount_add_remove
+    /^:mount\s+(add|del)\s+(\/[a-zA-Z0-9\/-_]+)/ => :mount_add_remove
 
     def help
       rez = ""

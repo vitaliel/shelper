@@ -10,7 +10,7 @@ class Os::Services::Init < SHelper::BasePlugin
 
   cmd_map /^:service\s+([a-z\-]+)\s+([a-zA-Z\-0-9]+)/ => :run_service
 
-  CMDS = %w{stop start reload}
+  CMDS = %w{stop start reload restart}
 
   def help
     ":service #{CMDS.join '|'} SERVICE_NAME - will run sv command with argument"
