@@ -1,5 +1,5 @@
 xmpp:
-  server: localhost
+  server_name: localhost
   port: 5222
   username: desktop@localhost
   password:

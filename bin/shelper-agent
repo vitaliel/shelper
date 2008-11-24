@@ -1,10 +1,15 @@
 #!/usr/bin/env ruby
 
-base = File.dirname(__FILE__)
-$:.unshift "#{base}/../lib"
+params = nil
+
+if ARGV.size > 0
+  params = ARGV
+else
+  base = File.dirname(__FILE__)
+  $:.unshift "#{base}/../lib"
+  params = ["#{base}/../conf/shelper.yml"]
+end
 
 require 'shelper'
 
-STDOUT.sync = true
-
-SHelper.start ["#{base}/../conf/shelper.yml"]
+SHelper.start params
