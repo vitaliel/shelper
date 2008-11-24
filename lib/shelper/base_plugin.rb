@@ -28,7 +28,7 @@ class SHelper::BasePlugin
     end
 
     rez = @cmd_ctl.wait
-    send_response("Command '#{cmd}' exited with status: #{rez[1]}") if rez[1] != 0
+    send_response("Command '#{cmd}' exited with status: #{rez[1]}") unless @message.id =~ /^task/
     return rez[1]
   rescue => e
     send_response("Error: #{e.class} #{e.message}\n#{e.backtrace.join "\n"}")

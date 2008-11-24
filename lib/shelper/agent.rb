@@ -135,6 +135,14 @@ class SHelper::Agent
     @client.send(message)
   end
 
+  def send_error_response(msg_in, body)
+    reply = msg_in.answer(true)
+    reply.type = :error
+    reply.delete_element "html"
+    reply.body = body
+    @client.send(reply)
+  end
+
   def send_raw(message)
     @client.send(message)
   end
@@ -203,7 +211,13 @@ class SHelper::Agent
           obj.agent = self
           obj.sender = msg.from
           obj.message = msg
-          obj.send(cmd, $~)
+
+          begin
+            obj.send(cmd, $~)
+          rescue => e
+            error = "Command error:\n" << e.to_s << "\n" << e.backtrace.join("\n")
+            send_error_response(msg, error)
+          end
 
           return true
         end
