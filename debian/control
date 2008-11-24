@@ -2,6 +2,7 @@ Source: shelper
 Section: admin
 Priority: optional
 Maintainer: Vitalie Lazu <vitalie.lazu@gmail.com>
+Format: 3.0 (git)
 Build-Depends: debhelper (>= 4.0.0)
 #Build-Depends-Indep: libtest-unit-ruby (>>1.8), ruby (>>1.8), rdoc(>>1.8), rcov
 Standards-Version: 3.7.3
@@ -9,7 +10,7 @@ Standards-Version: 3.7.3
 Package: shelper
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, ruby (>>1.8), runit (>= 1.8.0-2), libxmpp4r-ruby1.8 (>= 0.4-1)
-Recommends: ejabberd
+Suggests: ejabberd
 Description: jabber agent to assist with system administration
   SHelper is a Jabber agent written in ruby that will help system administrators with their daily tasks.
   It is simplified version of Engine Yard Vertebra, it was not oriented for the cloud computing, but can be used for that too.
