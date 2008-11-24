@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'configatron'
 
 require 'xmpp4r'
@@ -10,7 +9,6 @@ require 'utils/annotatable'
 require 'shelper/base_plugin'
 require 'shelper/command'
 require 'shelper/agent'
-
 
 Thread.abort_on_exception = true
 
@@ -24,7 +22,7 @@ module SHelper
         raise "Provide config file!"
       end
 
-      configatron.log_dir = File.dirname(__FILE__) + "/../log/"
+      configatron.log_dir = File.dirname(__FILE__) + "/../log/" if configatron.log_dir.nil?
       logger.info("SHelper start")
 
       if configatron.xmpp.debug
