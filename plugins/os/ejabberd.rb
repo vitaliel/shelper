@@ -10,11 +10,18 @@ module Os
     author 'Vitalie Lazu'
 
     cmd_map \
+    /^:ej\s+del\s+([a-z0-9]+)\s+([a-z0-9.-]+)/ => :ej_unregister,
     /^:ej\s+add\s+([a-z0-9]+)\s+([a-z0-9.-]+)/ => :ej_register
 
     def help
       rez = ""
       rez << ":ej add USERNAME DOMAIN - will register a new user with random password\n"
+      rez << ":ej del USERNAME DOMAIN - will register a new user with random password\n"
+    end
+
+    # Parameters: username, domain
+    def ej_unregister(msg)
+      run_cmd "ejabberdctl unregister #{msg[1]} #{msg[2]}"
     end
 
     # Parameters: username, domain
