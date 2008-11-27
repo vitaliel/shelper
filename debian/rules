@@ -6,6 +6,8 @@
 # dh-make output file, you may use that output file without restriction.
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
+# Based on rake debian package.
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -23,14 +25,7 @@ clean: clean-patched unpatch
 clean-patched:
 	dh_testdir
 	dh_testroot
-
-	# Add here commands to clean up after the build process.
-	rm -rf testdata
-
-	# FIXED upstream for 0.8.2
-	find . -name '._*' -exec rm {} +
-
-	dh_clean 
+	dh_clean
 
 install: build
 

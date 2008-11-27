@@ -1,24 +1,40 @@
+# Should have my_company/daemon.rb path
 
-module MyModule
-  class MyPlugin < SHelper::BasePlugin
+module MyCompany
+  class Daemon < SHelper::BasePlugin
+    name "queue-daemon"
+    description "This plugin will save some of my time"
+    version "1.0"
+    author "Your Name"
+
+    # Help that will be shown in case admin will send message with body ":help queue-daemon"
     def help
-      "cmd1: config parameter value - will set plugin configuration parameter, params: config_path"
-      "cmd2: add-ip 127.0.0.4 - will add IP to daemon acl"
+      rez = "qd: config parameter value - will set plugin configuration parameter, params: config_path"
+      rez << "qd: add-ip 127.0.0.4 - will add IP to queue-daemon acl"
     end
 
-    def init
-      {/^cmd1: config ([^\s]+)\s+(.*)/i => :cmd1}
-      {/^cmd2: add-ip (.*)/i => :cmd2}
+    # hash with regexp and method to call if regexp is matched
+    cmd_map \
+    /^qd: config ([^\s]+)\s+(.*)/i => :cmd_config,
+    /^qd: add-ip (.*)/i => :cmd_add_ip_to_acl
+
+    # This method will be called for first command in command map
+    # +msg+ - is a regexp matched data: you can access parameters with msg[1] for $1, msg[2] - $2 and so on
+    def cmd_config(msg)
+      # TODO
+      send_response("Operation was completed successfully.")
     end
 
-    # TODO: Implement me
-    def cmd1(msg)
-    end
-
-    # TODO: Implement me
-    def cmd2(msg)
+    # This method will be called for second command in command map
+    # +msg+ - is a regexp matched data: you can access parameters with msg[1] for $1, msg[2] - $2 and so on
+    def cmd_add_ip_to_acl(msg)
+      # Reply will be sent to user that sent this message
+      # output will be sent to user too
+      # if command is not a task, command that was executed and return code will be sent too
+      run_cmd "/bin/echo hi"
     end
   end
 end
 
-SHelper.register_plugin MyModule::MyPlugin
+# Register our plugin in the framework
+SHelper.register_plugin MyCompany::Daemon

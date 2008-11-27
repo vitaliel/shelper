@@ -1,9 +1,27 @@
 
+= Testing installation
+
 * Install a jabber server: ejabberd or other software
 * apt-get install rubygems
-* gem install configatron xmpp4r
+* gem install xmpp4r
 * Copy shelper.yml-example to shelper.yml and set parameters
 * Run ./bin/shelper-agent
 * Configure server from your favorite IM
 * Cook plugins for your needs
 * Share them with the community
+
+= Use Debian package
+* add to your /etc/apt/source.list
+  deb http://apt.assembla.com/debian/ sid main
+* Import my gpg key
+  gpg_key=5F527DCE
+  asc_file=/tmp/vitaliel.asc
+  gpg --keyserver wwwkeys.eu.pgp.net --recv-keys $gpg_key
+  gpg -a --output $asc_file --export $gpg_key
+
+  if [ $? == 0 ]; then
+    apt-key add $asc_file && apt-get update && echo Ok
+  fi
+* apt-get install shelper
+
+= Build Debian package yourself
