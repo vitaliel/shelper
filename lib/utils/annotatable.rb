@@ -1,3 +1,7 @@
+#
+# From Radian CMS project
+#
+
 module Annotatable
 
   def self.included(base)

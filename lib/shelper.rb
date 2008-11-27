@@ -1,3 +1,8 @@
+#
+# Author: Vitalie Lazu <vitalie.lazu@gmail.com>
+# Date: Thu, 27 Nov 2008 16:36:34 +0200
+#
+
 require 'configatron'
 
 require 'xmpp4r'

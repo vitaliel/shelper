@@ -1,5 +1,7 @@
+#
 # Author: Vitalie Lazu
-# Sun, 23 Nov 2008 19:02:59 +0200
+# Date: Sun, 23 Nov 2008 19:02:59 +0200
+#
 
 module Utils; end
 

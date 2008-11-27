@@ -1,3 +1,8 @@
+#
+# Author: Vitalie Lazu <vitalie.lazu@gmail.com>
+# Date: Thu, 27 Nov 2008 16:10:04 +0200
+#
+
 require 'shelper/file_util'
 
 module SHelper;end

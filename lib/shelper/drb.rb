@@ -1,5 +1,9 @@
+#
+# Author: Vitalie Lazu <vitalie.lazu@gmail.com>
+# Date: Sun, 23 Nov 2008 00:22:04 +0200
+#
+
 # DRB connector for xmpp agent
-# Created by Vitalie Lazu at Sun, 23 Nov 2008 00:22:30 +0200
 
 require 'drb'
 require 'drb/acl'
