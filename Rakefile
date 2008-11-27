@@ -1,6 +1,9 @@
 require 'rake/testtask'
 
+$: << File.expand_path(File.dirname(__FILE__) + '/lib')
+
 task :default => :test
+require 'shelper/version'
 
 ENV['EDITOR'] = "nano"
 branch = "deb"
@@ -11,6 +14,12 @@ task :test do
     t.test_files = FileList['test/*test.rb']
     t.verbose = true
   end
+end
+
+task :tar do
+  file = "shelper-" << SHelper::VERSION::STRING << ".tar.gz"
+  puts "Creating #{file}"
+  sh("git archive --format=tar --prefix='" << File.basename(File.expand_path('.')) << "/' HEAD | gzip -9 > ../" << file)
 end
 
 task :deb_dch do
