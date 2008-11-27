@@ -16,6 +16,7 @@ module SHelper
     # Remove lines from file that match regexp or substring
     # +match+ - regexp or substring
     # Returns true if file was modified, otherwise false
+    # TODO: returns how many lines were removed
     def remove_line(match)
       func = nil
 

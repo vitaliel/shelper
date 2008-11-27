@@ -12,6 +12,19 @@ class SHelper::BasePlugin
   # cmd_map /^help$/ => :show_help
   annotate :cmd_map
 
+  class CmdRegexp
+    # case sensitive
+    ALPHA_NUM = "a-z0-9"
+    # case insensitive
+    ALPHA_NUM_I = "a-zA-Z0-9"
+
+    # vars
+    PATH = "/[/" << ALPHA_NUM_I << "-_]+"
+    DNS = "[" << ALPHA_NUM_I << "][" << ALPHA_NUM_I << "\\-.]+"
+    # IP or IP with mask: 127.0.0.1/8, min 7 chars: 1.1.1.1
+    IP_MASK = "[1-9][0-9./]{6,}"
+  end
+
   attr_writer :agent, :sender, :message
 
   # Will be called to init the plugin
