@@ -5,7 +5,13 @@
 
 require 'configatron'
 
-require 'xmpp4r'
+begin
+  require 'xmpp4r'
+rescue LoadError
+  require 'rubygems'
+  require 'xmpp4r'
+end
+
 require 'xmpp4r/roster/helper/roster'
 require 'xmpp4r/version/iq/version'
 
@@ -65,7 +71,7 @@ module SHelper
       # load other plugins
       plugins_dir = configatron.plugins_dir
 
-      if plugins_dir && test(?d, plugins_dir)
+      if !plugins_dir.nil? && test(?d, plugins_dir)
         load_plugins_from plugins_dir
       end
     end
