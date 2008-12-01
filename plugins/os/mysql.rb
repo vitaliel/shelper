@@ -1,5 +1,3 @@
-# Should have my_company/daemon.rb path
-
 module Os
   class Mysql < SHelper::BasePlugin
     name "mysql"
@@ -7,7 +5,7 @@ module Os
     version "1.0"
     author "Vitalie Lazu"
 
-    # Help that will be shown in case admin will send message with body ":help queue-daemon"
+    # Help that will be shown in case admin will send message with body ":help mysql"
     def help
       rez = ":mysql processlist - will show process list\n"
       rez << ":mysql status - will show mysql status\n"
