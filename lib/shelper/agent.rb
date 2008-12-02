@@ -126,16 +126,10 @@ class SHelper::Agent
     end
   end
 
-  def send_message(recipient, text, reply = false)
+  def send_message(recipient, text)
     message = Message.new(recipient)
     message.type = :chat
-
-    if reply
-      message.body = "Received message: " << text
-    else
-      message.body = text
-    end
-
+    message.body = text
     @client.send(message)
   end
 
