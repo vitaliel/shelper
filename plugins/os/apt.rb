@@ -8,7 +8,7 @@ module Os
     /^:aptd\s+(update|upgrade|dist-upgrade)/ => :apt_dry_run,
     /^:aptd\s+(install|remove)\s+([A-Za-z0-9\-_]+)/ => :apt_dry_run_install,
     /^:apt\s+(install|remove)\s+([A-Za-z0-9\-_]+)/ => :apt,
-    /^:apt\s+(update|upgrade|dist-upgrade)/ => :apt_update,
+    /^:apt\s+(clean|update|upgrade|dist-upgrade)/ => :apt_update,
     /^:apt\s+search\s+([^\s]+)/ => :list_packages
 
     def help
@@ -16,7 +16,7 @@ module Os
       rez << ":aptd update|upgrade|dist-upgrade - will run apt-get with argument passed in dry-run mode\n"
       rez << ":aptd install|remove pkg_name - will install/remove the pkg_name in dry-run mode\n"
       rez << "\n"
-      rez << ":apt update|upgrade|dist-upgrade - will run apt-get with argument passed\n"
+      rez << ":apt clean|update|upgrade|dist-upgrade - will run apt-get with argument passed\n"
       rez << ":apt install|remove pkg_name - will install/remove the pkg_name\n"
       rez << ":apt dry-run-install pkg_name - will not perform real operations, just will show what it will do\n"
       rez << ":apt search pattern - will display packages that match pattern\n"
