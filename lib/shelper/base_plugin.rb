@@ -17,6 +17,11 @@ class SHelper::BasePlugin
   # cmd_map /^help$/ => :show_help
   annotate :cmd_map
 
+  # Will allow plugins to schedule cron jobs
+  # format: hash, cron_line => :method to call
+  # cron_jobs "0/5 * * * *" => :check_service
+  annotate :cron_jobs
+
   class CmdRegexp
     # case sensitive
     ALPHA_NUM = "a-z0-9"

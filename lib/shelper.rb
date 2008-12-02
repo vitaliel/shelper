@@ -85,6 +85,24 @@ module SHelper
 
     def register_plugin(klass)
       @agent.add_plugin(klass)
+
+      # check for cron jobs
+      if klass.cron_jobs
+        for cron_line, method in klass.cron_jobs
+          logger.info("Cron: registering #{klass}##{method} to run at #{cron_line}")
+          scheduler.schedule(cron_line) do
+            logger.info("Cron: starting #{klass}##{method}...")
+            obj = klass.new
+            obj.agent = @agent
+            obj.send(method)
+          end
+        end
+      end
+    end
+
+    def scheduler
+      require 'rufus/scheduler'
+      @scheduler ||= Rufus::Scheduler.start_new
     end
 
     def logger
