@@ -57,12 +57,13 @@ class SHelper::BasePlugin
     send_response("Error: #{e.class} #{e.message}\n#{e.backtrace.join "\n"}")
   end
 
-  def send_response(msg)
+  def send_response(msg, subject = nil)
     answer = @message.answer(true)
     answer.id = "r" << answer.id if answer.id =~ /^task/
     # pidgin sends html version also
     answer.delete_element "html"
     answer.body = msg
+    answer.subject = subject if subject
     @agent.send_raw(answer)
   end
 

@@ -71,8 +71,12 @@ module SHelper
       # load other plugins
       plugins_dir = configatron.plugins_dir
 
-      if !plugins_dir.nil? && test(?d, plugins_dir)
-        load_plugins_from plugins_dir
+      unless plugins_dir.nil?
+        if test(?d, plugins_dir)
+          load_plugins_from plugins_dir
+        else
+          logger.error "Plugin dir does not exists: #{plugins_dir}"
+        end
       end
     end
 
