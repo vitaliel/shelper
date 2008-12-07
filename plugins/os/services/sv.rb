@@ -8,7 +8,7 @@ class Os::Services::Sv < SHelper::BasePlugin
   description "plugin for runit sv command"
   author "Vitalie Lazu"
 
-  cmd_map /^:sv\s+([a-z\-]+)\s+([a-zA-Z\-0-9]+)/ => :run_sv
+  cmd_map /^:sv\s+([a-z\-]+)\s+([a-zA-Z\-0-9_]+)/ => :run_sv
 
   CMDS = %w{stop start status up down force-stop restart}
 
