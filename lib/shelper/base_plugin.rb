@@ -26,13 +26,16 @@ class SHelper::BasePlugin
     # case sensitive
     ALPHA_NUM = "a-z0-9"
     # case insensitive
-    ALPHA_NUM_I = "a-zA-Z0-9"
+    ALPHA_NUM_I = "A-Z" << ALPHA_NUM
 
     # vars
-    PATH = "/[/" << ALPHA_NUM_I << "-_]+"
+    PATH = "/[/" << ALPHA_NUM_I << "_\\-]+"
+    FILE_PATH = "/[/" << ALPHA_NUM_I << "_.\\-]+"
+    DIR_NAME = "[" << ALPHA_NUM_I << "_\\-]+"
     DNS = "[" << ALPHA_NUM_I << "][" << ALPHA_NUM_I << "\\-.]+"
     # IP or IP with mask: 127.0.0.1/8, min 7 chars: 1.1.1.1
     IP_MASK = "[1-9][0-9./]{6,}"
+    FILE_URL = "https?://" << DNS << FILE_PATH
   end
 
   attr_writer :agent, :sender, :message
@@ -58,13 +61,7 @@ class SHelper::BasePlugin
   end
 
   def send_response(msg, subject = nil)
-    answer = @message.answer(true)
-    answer.id = "r" << answer.id if answer.id =~ /^task/
-    # pidgin sends html version also
-    answer.delete_element "html"
-    answer.body = msg
-    answer.subject = subject if subject
-    @agent.send_raw(answer)
+    @agent.send_cmd_response(@message, msg, subject)
   end
 
   def file_util(file_path)

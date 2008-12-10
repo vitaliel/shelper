@@ -141,6 +141,16 @@ class SHelper::Agent
     @client.send(reply)
   end
 
+  def send_cmd_response(orig_msg, body, subject = nil)
+    answer = orig_msg.answer(true)
+    answer.id = "r" << answer.id if answer.id =~ /^task/
+    # pidgin sends html version also
+    answer.delete_element "html"
+    answer.body = body
+    answer.subject = subject if subject
+    send_raw(answer)
+  end
+
   def send_raw(message)
     @client.send(message)
   end
@@ -157,12 +167,20 @@ class SHelper::Agent
       msg = klass.name
       msg << " (#{klass.description})" if klass.description
       msg << "\n"
-      msg << help_txt
+      msg << add_new_lines(help_txt)
     else
       msg = "Can not find plugin '#{plugin_name}'"
     end
 
     msg
+  end
+
+  def add_new_lines(arg)
+    if arg.is_a?(Array)
+      arg.join("\n")
+    else
+      arg
+    end
   end
 
   def start_worker
@@ -211,7 +229,11 @@ class SHelper::Agent
           obj.message = msg
 
           begin
-            obj.send(cmd, $~)
+            rez = obj.send(cmd, $~)
+
+            if rez.is_a?(String) || rez.is_a?(Array)
+              send_cmd_response(msg, add_new_lines(rez))
+            end
           rescue => e
             error = "Command error:\n" << e.to_s << "\n" << e.backtrace.join("\n")
             send_error_response(msg, error)
