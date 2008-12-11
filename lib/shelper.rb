@@ -36,11 +36,10 @@ module SHelper
       configatron.log_dir = File.dirname(__FILE__) + "/../log/" if configatron.log_dir.nil?
       logger.info("SHelper start")
 
-      if configatron.xmpp.debug
+      unless configatron.xmpp.debug.nil?
         Jabber.logger = Logger.new "#{configatron.log_dir}/jabber.log"
+        Jabber.debug = true
       end
-
-      Jabber.debug = configatron.xmpp.debug
 
       @agent = Agent.new
       @agent.logger = logger
