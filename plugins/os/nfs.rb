@@ -1,3 +1,7 @@
+#
+# Author: Vitalie Lazu <vitalie.lazu@gmail.com>
+# Date: Thu, 11 Dec 2008 10:57:21 +0200
+#
 
 module Os
   class Nfs < SHelper::BasePlugin
