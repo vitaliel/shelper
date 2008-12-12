@@ -13,7 +13,7 @@ module Os
     cmd_map \
     /^:nfs\s+reload/ => :reload,
     /^:nfs\s+list/ => :list,
-    /^:nfs\s+export\s+(\/[a-z0-9\/]+)\s+(rw|ro)\s+([a-zA-Z0-9.-]+)/ => :nfs_export
+    /^:nfs\s+export\s+(#{CmdRegexp::PATH})\s+(rw|ro)\s+(#{CmdRegexp::DNS})/ => :nfs_export
 
     def help
       rez = ""

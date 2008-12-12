@@ -14,8 +14,8 @@ module Os
 
     cmd_map \
     /^:fstab\s+list/ => :fs_list,
-    /^:fstab\s+remove\s+([a-zA-Z0-9\/]+)/ => :fs_remove,
-    /^:fstab\s+add-nfs\s+([a-zA-Z0-9.-]+)\s+([a-zA-Z0-9\/-_]+)\s+([a-zA-Z0-9\/-_]+)\s*([a-z0-9,=]+)?/ => :fs_add_nfs
+    /^:fstab\s+remove\s+(#{CmdRegexp::PATH})/ => :fs_remove,
+    /^:fstab\s+add-nfs\s+(#{CmdRegexp::DNS})\s+(#{CmdRegexp::PATH})\s+(#{CmdRegexp::PATH})\s*([a-z0-9,=]+)?/ => :fs_add_nfs
 
     def help
       rez = ""
