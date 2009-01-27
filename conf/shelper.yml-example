@@ -11,6 +11,9 @@ admin:
 # plugins_dir: /home/lz/projects/shelper-plugins
 log_dir: /var/log/shelper
 
+# if server is EC2 instance
+# ec2: true
+
 # Will allow other ruby clients to connect and send messages on agent behalf
 drb:
   enabled: yes

@@ -11,7 +11,12 @@ class SHelper::Agent
   attr_accessor :logger
 
   def initialize
-    user = JID.new("#{configatron.xmpp.username}/SHelperAgent")
+    if configatron.xmpp.resource.nil?
+      configatron.xmpp.resource = "SHelperAgent"
+    end
+
+    user = JID.new("#{configatron.xmpp.username}/#{configatron.xmpp.resource}")
+
     @password = configatron.xmpp.password
     @client = Client.new(user)
     @cmd_map = {}

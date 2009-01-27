@@ -15,6 +15,9 @@ end
 require 'xmpp4r/roster/helper/roster'
 require 'xmpp4r/version/iq/version'
 
+require 'net/http'
+require 'uri'
+
 require 'utils/annotatable'
 
 require 'shelper/base_plugin'
@@ -52,6 +55,10 @@ module SHelper
       end
 
       load_plugins
+
+      unless configatron.ec2.nil?
+        configatron.xmpp.resource = fetch_instance_id
+      end
 
       begin
         @agent.connect
@@ -106,6 +113,16 @@ module SHelper
     def scheduler
       require 'rufus/scheduler'
       @scheduler ||= Rufus::Scheduler.start_new
+    end
+
+    def fetch_instance_id
+      url = URI.parse('http://169.254.169.254/latest/meta-data/instance-id')
+
+      res = Net::HTTP.start(url.host, url.port) do |http|
+        http.get(url.path)
+      end
+
+      res.body.strip
     end
 
     def logger
