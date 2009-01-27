@@ -44,6 +44,10 @@ module SHelper
         Jabber.debug = true
       end
 
+      unless configatron.ec2.nil?
+        configatron.xmpp.resource = fetch_instance_id
+      end
+
       @agent = Agent.new
       @agent.logger = logger
 
@@ -55,10 +59,6 @@ module SHelper
       end
 
       load_plugins
-
-      unless configatron.ec2.nil?
-        configatron.xmpp.resource = fetch_instance_id
-      end
 
       begin
         @agent.connect
